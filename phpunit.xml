@@ -1,0 +1,19 @@
+<phpunit
+    bootstrap="./tests/bootstrap.php"
+    colors="true">
+
+    <testsuite name="Test case testing">
+        <directory>./tests/</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-clover" target="./var/logs/phpunit-clover.xml"/>
+    </logging>
+
+</phpunit>

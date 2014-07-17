@@ -1,0 +1,25 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+
+before_script:
+  - phpenv config-add ./app/config/php.ini
+  - composer self-update
+  - composer install --prefer-source
+
+script:
+  - find ./src -name "*.php" -exec php -l {} \;
+  - ./bin/phpspec run --format=pretty --config=./app/config/phpspec.yml
+  - ./bin/phpunit --printer PHPUnit_Util_TestDox_ResultPrinter_Text
+  - ./bin/phpcpd -vvv --log-pmd="./var/logs/cpd.xml" ./src
+  - ./bin/phpmd ./src text ./app/config/ruleset.xml
+
+after_script:
+  - ./bin/coveralls -v
+  - php ./coverage-checker.php ./var/logs/phpunit-clover.xml 50
+  - php ./coverage-checker.php ./var/logs/phpspec-clover.xml 50
+  - cat var/logs/phpspec-clover.xml
+  - ./bin/phploc ./src
